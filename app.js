@@ -35,10 +35,13 @@ app.use(
     secret: process.env.COOKIE_KEY || "default_key",
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: true, // Set to true for HTTPS
+      sameSite: 'None' // Allow cross-origin requests
+    },
   })
 );
-
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
