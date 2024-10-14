@@ -11,10 +11,26 @@ const port = process.env.PORT || 5000;
 
 // CORS options
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://badhaibazaar.vercel.app"],
+  origin: (origin, callback) => {
+    // Allow requests only from the specified origins
+    const allowedOrigins = ["http://localhost:5173", "https://badhaibazaar.vercel.app"];
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true); // Allow the request
+    } else {
+      callback(new Error("Not allowed by CORS")); // Reject the request
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
+  credentials: true, // Allow credentials to be sent
 };
+
+// Use CORS middleware
+app.use(cors(corsOptions));
+// Log incoming requests and their origins
+app.use((req, res, next) => {
+  console.log('Incoming request from origin:', req.headers.origin);
+  next();
+});
 
 // Use CORS middleware
 app.use(cors(corsOptions));
@@ -37,11 +53,13 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-      secure: true, // Set to true for HTTPS
-      sameSite: 'None' // Allow cross-origin requests
+      secure: true, // Use secure cookies in production
+      sameSite: 'None', // Required for cross-origin requests
     },
   })
 );
+
+
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
