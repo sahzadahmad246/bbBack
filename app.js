@@ -4,14 +4,14 @@ const session = require("express-session");
 const passport = require("passport");
 const mongoose = require("mongoose");
 const connectDB = require("./mongoDB/dbConnection");
-const authRoutes = require("./routes/authRoute"); // Import the routes
+const authRoutes = require("./routes/authRoute");
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 5000;
 
 // CORS options
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "https://badhaibazaar.vercel.app"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
