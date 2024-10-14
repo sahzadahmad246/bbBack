@@ -29,6 +29,11 @@ router.get("/profile", (req, res) => {
       .json({ success: false, message: "User not authenticated" });
   }
   // Send the entire user object and a success status
+  res.cookie("sessionId", req.session.id, {
+    httpOnly: true,
+    secure: true, // Set to true for production
+    sameSite: "None", // Necessary for cross-origin requests
+  });
   res.json({ success: true, user: req.user });
 });
 
