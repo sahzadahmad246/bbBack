@@ -14,10 +14,10 @@ router.get(
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "http://localhost:5173/login", // Redirect to login if authentication fails
+    failureRedirect: "https://badhaibazaar.vercel.app/login", // Redirect to login if authentication fails
   }),
   (req, res) => {
-    res.redirect("http://localhost:5173/profile");
+    res.redirect("https://badhaibazaar.vercel.app/profile");
   }
 );
 
