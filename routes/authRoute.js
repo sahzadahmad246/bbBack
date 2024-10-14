@@ -17,7 +17,7 @@ router.get(
     failureRedirect: "https://badhaibazaar.vercel.app/login", // Redirect to login if authentication fails
   }),
   (req, res) => {
-    res.redirect("http://localhost:5173/profile");
+    res.redirect("https://badhaibazaar.vercel.app/profile");
   }
 );
 
