@@ -3,7 +3,7 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("../models/userModel");
 
 module.exports = (passport) => {
-  // Export as a function
+ 
   passport.use(
     new GoogleStrategy(
       {
@@ -13,15 +13,15 @@ module.exports = (passport) => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          console.log(profile); // Log the profile to check its structure
+          console.log(profile); 
           const existingUser = await User.findOne({ googleId: profile.id });
 
-          // Check if user already exists
+          
           if (existingUser) {
             return done(null, existingUser);
           }
 
-          // Get image URL from profile photos if available
+         
           const image =
             profile.photos && profile.photos.length > 0
               ? profile.photos[0].value
@@ -37,7 +37,7 @@ module.exports = (passport) => {
             email: profile.emails[0].value,
           }).save();
 
-          done(null, newUser); // Complete authentication
+          done(null, newUser); 
         } catch (error) {
           console.error("Error in Google Strategy:", error);
           done(error, null);
