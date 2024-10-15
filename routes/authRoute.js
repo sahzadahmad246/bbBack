@@ -2,6 +2,7 @@
 const express = require("express");
 const passport = require("passport");
 const router = express.Router();
+const frontendUrl = process.env.FRONTEND_URL;
 
 // Auth routes
 router.get(
@@ -14,10 +15,10 @@ router.get(
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "https://badhaibazaar.vercel.app/login", // Redirect to login if authentication fails
+    failureRedirect: `${frontendUrl}/login`,
   }),
   (req, res) => {
-    res.redirect("https://badhaibazaar.vercel.app/profile");
+    res.redirect(`${frontendUrl}/profile`);
   }
 );
 
@@ -28,7 +29,7 @@ router.get("/profile", (req, res) => {
       .status(401)
       .json({ success: false, message: "User not authenticated" });
   }
-  // Send the entire user object and a success status
+ 
   res.json({ success: true, user: req.user });
 });
 
@@ -38,7 +39,7 @@ router.get("/logout", (req, res) => {
     if (err) {
       return res.status(500).json({ success: false, message: "Logout failed" });
     }
-    res.clearCookie("connect.sid"); // Clear the session cookie
+    res.clearCookie("connect.sid");
     res.json({ success: true, message: "Logged out successfully" });
   });
 });
