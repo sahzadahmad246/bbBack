@@ -27,13 +27,13 @@ module.exports = (passport) => {
               ? profile.photos[0].value
               : "";
 
-          // Create a new user in the database
+          
           const newUser = await new User({
             googleId: profile.id,
             displayName: profile.displayName,
             firstName: profile.name.givenName,
             lastName: profile.name.familyName,
-            image: image, // Store the image URL
+            image: image, 
             email: profile.emails[0].value,
           }).save();
 

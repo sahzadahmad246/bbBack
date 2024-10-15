@@ -37,8 +37,8 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
-      secure: true, // Only set for HTTPS
-      sameSite: "none", // Or "none" if you need cross-site cookies
+      secure: true,
+      sameSite: "lax", 
     },
   })
 );
@@ -50,10 +50,10 @@ app.use(passport.session());
 // Passport configuration
 require("./config/passport-setup")(passport);
 
-// Use the auth routes
-app.use("/", authRoutes); // Use the imported routes
 
-// Start the server
+app.use("/", authRoutes);
+
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
