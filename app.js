@@ -35,7 +35,11 @@ app.use(
     secret: process.env.COOKIE_KEY || "default_key",
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: true, // Only set for HTTPS
+      sameSite: "none", // Or "none" if you need cross-site cookies
+    },
   })
 );
 
