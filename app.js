@@ -5,9 +5,14 @@ const passport = require("passport");
 const mongoose = require("mongoose");
 const connectDB = require("./mongoDB/dbConnection");
 const authRoutes = require("./routes/authRoute");
+const occasionRoutes = require("./routes/occasionRoute");
 const cors = require("cors");
 const app = express();
+const cookieParser = require("cookie-parser");
 const port = process.env.PORT || 5000;
+const errorMiddleware = require("./middlewares/error");
+const cloudinary = require("cloudinary");
+const fileUpload = require("express-fileupload");
 
 // CORS options
 const corsOptions = {
@@ -18,7 +23,14 @@ const corsOptions = {
 
 // Use CORS middleware
 app.use(cors(corsOptions));
-
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
 // Connect to MongoDB
 connectDB()
   .then(() => {
@@ -35,11 +47,9 @@ app.use(
     secret: process.env.COOKIE_KEY || "default_key",
     resave: false,
     saveUninitialized: true,
-    cookie: {
-      maxAge: 24 * 60 * 60 * 1000,
-      secure: true,
-      sameSite: "none", 
-    },
+    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+    secure: true,
+    partitioned: true,
   })
 );
 
@@ -50,12 +60,18 @@ app.use(passport.session());
 // Passport configuration
 require("./config/passport-setup")(passport);
 
-
 app.use("/", authRoutes);
-
+app.use("/", occasionRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
+});
+
+// Cloudinary configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 // Handle unhandled promise rejections
@@ -75,3 +91,6 @@ process.on("SIGINT", () => {
   console.log("Received SIGINT. Closing server...");
   process.exit(0);
 });
+
+// Error middileware
+app.use(errorMiddleware);
